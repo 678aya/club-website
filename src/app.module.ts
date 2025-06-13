@@ -9,6 +9,7 @@ import { Order } from './typeorm/Order';
 import { Product } from './typeorm/Product';
 import { OrderModule } from './order/order.module';
 import { PointModule } from './point/point.module';
+import { Point } from './typeorm/Point';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -18,7 +19,7 @@ import { PointModule } from './point/point.module';
     username:'root',
     password:'6911',
     database:'Club',
-    entities:[User,Product,Order],
+    entities:[User,Product,Order,Point],
     synchronize:true,
     autoLoadEntities: true
   }), UserModule, ProductModule, OrderModule, PointModule],

@@ -5,11 +5,11 @@ import { Product } from 'src/typeorm/Product';
 import { Status } from 'src/enums/status';
 
 export class UpdateOrderAdminDto extends PartialType(CreateOrderDto) {
-    product : Product
+    product ?: Product
     
     @IsNumber()
-    amount : number
+    amount ?: number
 
     @IsEnum({enum:'Status'})
-    status : Status
+    status ?: Status
 }

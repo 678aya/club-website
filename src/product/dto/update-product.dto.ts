@@ -14,4 +14,6 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
     price ?: number
         
     details ?: string
+
+    amount ?: number
 }

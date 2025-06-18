@@ -3,8 +3,9 @@ import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Point } from 'src/typeorm/Point';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { User } from 'src/typeorm/User';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class PointService {
@@ -32,16 +33,13 @@ export class PointService {
     return {point , lastDate}
   }
 
-  findAll() {
-    return `This action returns all point`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} point`;
-  }
- 
-  update(id: number, updatePointDto: UpdatePointDto) {
-    return `This action updates a #${id} point`;
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async removeExpiredPoints(){
+    const threeMonthAgo = new Date()
+    threeMonthAgo.setMonth(threeMonthAgo.getMonth() - 3)
+    await this.pointRepo.delete({
+      createdAt : LessThan(threeMonthAgo)
+    })
   }
 
   async remove(userId: number) {

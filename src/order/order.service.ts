@@ -19,21 +19,21 @@ export class OrderService {
               @InjectRepository(Point) private readonly pointRepo :Repository<Point>,
               private readonly pointServices : PointService){}
 
-  async createOrder(userId : number , productId : number , amount : number) {
-    const user = await this.userRepo.find({where :{ id : userId}})
-    if(!user){
-      throw new BadRequestException(`THE USER WITH THE ID :${userId} NOT FOUND!! PLEASE MAKE SURE TO SIGN UP FIRST `)
-    }
-    const product = await this.productRepo.find({where : {id : productId}})
-    if(!product){
-      throw new BadRequestException(`THE PRODUCT NOT FOUND!!`)
-    }
-    if(product[0].amount < amount){
-      throw new BadRequestException(`we do not have such an amount sorry came back later`)
-    }
-    const price = product[0].price * amount
-    return price 
-  }
+  // async createOrder(userId : number , productId : number , amount : number) {
+  //   const user = await this.userRepo.find({where :{ id : userId}})
+  //   if(!user){
+  //     throw new BadRequestException(`THE USER WITH THE ID :${userId} NOT FOUND!! PLEASE MAKE SURE TO SIGN UP FIRST `)
+  //   }
+  //   const product = await this.productRepo.find({where : {id : productId}})
+  //   if(!product){
+  //     throw new BadRequestException(`THE PRODUCT NOT FOUND!!`)
+  //   }
+  //   if(product[0].amount < amount){
+  //     throw new BadRequestException(`we do not have such an amount sorry came back later`)
+  //   }
+  //   const price = product[0].price * amount
+  //   return price 
+  // }
 
   async setOrder(userId : number , productId : number , createOrderDto : CreateOrderDto){
     const user = await this.userRepo.find({where :{ id : userId}})
@@ -44,6 +44,9 @@ export class OrderService {
     if(!product){
       throw new BadRequestException(`THE PRODUCT NOT FOUND!!`)
     }
+    
+    const newAmount = (product[0].amount) - (createOrderDto.amount)
+
     if(product[0].amount < createOrderDto.amount){
       throw new BadRequestException(`we do not have such an amount sorry came back later`)
     }
@@ -65,6 +68,8 @@ export class OrderService {
         usePoint : true,
         totalPrice :finalPrice
       })
+      
+      this.productRepo.update(productId,{amount : newAmount})
       return await this.orderRepo.save(newOrder)
     }
 
@@ -73,6 +78,7 @@ export class OrderService {
         usePoint : false ,
         totalPrice :finalPrice
       })
+      this.productRepo.update(productId,{amount : newAmount})
       return await this.orderRepo.save(newOrder)
   }
   

@@ -10,6 +10,9 @@ import { Product } from './typeorm/Product';
 import { OrderModule } from './order/order.module';
 import { PointModule } from './point/point.module';
 import { Point } from './typeorm/Point';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import jwtConfig from './auth/config/jwt.config';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -20,9 +23,12 @@ import { Point } from './typeorm/Point';
     password:'6911',
     database:'Club',
     entities:[User,Product,Order,Point],
-    synchronize:true,
     autoLoadEntities: true
-  }), UserModule, ProductModule, OrderModule, PointModule],
+  }),ConfigModule.forRoot({
+      isGlobal: true, // ensures all modules can access config
+      envFilePath: '.env', // make sure this path is correct
+      load: [jwtConfig], // load your custom config
+    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

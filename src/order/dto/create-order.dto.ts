@@ -4,7 +4,6 @@ export class CreateOrderDto {
     @IsNumber()
     amount : number
 
-    @IsNotEmpty()
     usePoint : boolean
 
     @IsNumber()

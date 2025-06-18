@@ -5,13 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/User';
 import {Raw, Repository } from 'typeorm';
 import { Role } from 'src/enums/roles';
-import { Order } from 'src/typeorm/Order';
+import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(User) private readonly UserRepo : Repository<User>){}
 
-  async create(createUserDto: CreateUserDto) {
+  async signUp(createUserDto: CreateUserDto) {
     const user = this.UserRepo.create(createUserDto)
     if(!user){
       throw new BadRequestException('THE USER COULD NOT BE CREATED!')
@@ -19,8 +19,15 @@ export class UserService {
     return await this.UserRepo.save(user)
   }
 
-  findAll() {
-    return this.UserRepo.find()
+  
+  async findByEmail(email : string) {
+    const user = await this.UserRepo.findOne({
+      where : {email : email}
+    })
+    if(!user){
+      throw new NotFoundException(`THE USER WITH THE EMAIL :${email}  NOT FOUND!!`)
+    }
+    return user
   }
 
   async findByName(namep : string){
@@ -39,8 +46,22 @@ export class UserService {
     return user
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.UserRepo.update(id,updateUserDto)
+  async findById(userid : number){
+    const user = await this.UserRepo.find({where :{id : userid}})
+    if(!user){
+      throw new NotFoundException('user not found')
+    }
+    return user
+  }
+
+  async findAll(){
+    const users = await this.UserRepo.find()
+    return users
+  }
+
+
+  async update(id: number, updateDto: UpdateUserDto | UpdateUserAdminDto) {
+    const user = await this.UserRepo.update(id,updateDto)
     if (!user) {
     throw new NotFoundException(`User with ID ${id} not found.`);
   }

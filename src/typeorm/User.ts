@@ -22,7 +22,7 @@ export class User{
     @IsInt()
     age : number
 
-    @Column()
+    @Column({unique: true})
     @IsEmail()
     email : string
 
@@ -35,8 +35,11 @@ export class User{
     @Column({type:'enum',enum:SubscriptionType})
     subscriptionType : SubscriptionType
 
-    @Column({default:'ss'})
+    @Column({default:'0'})
     password : string
+
+    @Column({default:''})
+    hashedRefreshToken : string
 
     @Column({default:"0"})
     SkillOrExperienceLevel : string 

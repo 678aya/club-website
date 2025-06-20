@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,10 +6,15 @@ import { User } from 'src/typeorm/User';
 import {Raw, Repository } from 'typeorm';
 import { Role } from 'src/enums/roles';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
+import { JoinRequest } from 'src/typeorm/JoinRequests';
+import { CreateRequestDto } from './dto/create-request.dto';
+import { UpdateRequestDto } from './dto/updateRequest.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly UserRepo : Repository<User>){}
+  constructor(
+              @InjectRepository(User) private readonly UserRepo : Repository<User>,
+              @InjectRepository(JoinRequest) private readonly joinRepo : Repository<JoinRequest>){}
 
   async signUp(createUserDto: CreateUserDto) {
     const user = this.UserRepo.create(createUserDto)
@@ -32,7 +37,7 @@ export class UserService {
 
   async findByName(namep : string){
     const user = await this.UserRepo.find({ where: { name: Raw((alias) => `LOWER(${alias}) LIKE LOWER('%${namep}%')`) } });
-    if(!user || (await user).length==0 ){
+    if(!user){
       throw new NotFoundException(`THER IS NO USER WITH THE NAME :${namep}`)
     }
     return user
@@ -74,5 +79,23 @@ export class UserService {
     throw new NotFoundException(`User with ID ${id} not found.`);
   }
     return this.UserRepo.remove(user)
+  }
+
+  async sendJoinRequest(id : number , createRequestDto : CreateRequestDto){
+    const user = await this.UserRepo.find({where:{id : id}})
+    if (!user) {
+    throw new NotFoundException(`User with ID ${id} not found.`);
+  }
+
+    const request = await this.joinRepo.create(createRequestDto)
+    return this.joinRepo.save(request)
+  }
+
+  async updateRequest(reqId: number, updateDto: UpdateRequestDto) {
+   const request = this.joinRepo.find({ where : {id : reqId}})
+   if(!request){
+    throw new NotFoundException(`this request ${reqId} not found`)
+   }
+   return await this.joinRepo.update(reqId,updateDto)
   }
 }

@@ -11,9 +11,10 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
+import { JoinRequest } from 'src/typeorm/JoinRequests';
 
 @Module({
-  imports :[TypeOrmModule.forFeature([User]),
+  imports :[TypeOrmModule.forFeature([User,JoinRequest]),
             JwtModule.registerAsync(jwtConfig.asProvider()),
             ConfigModule.forFeature(jwtConfig),
           ConfigModule.forFeature(refreshJwtConfig)],

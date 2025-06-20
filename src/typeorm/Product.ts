@@ -1,7 +1,8 @@
-import { Category } from "src/enums/Category";
+
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./Order";
 import { text } from "stream/consumers";
+import { Category } from "src/enums/Category";
 
 @Entity({name:"products"})
 export class Product{

@@ -13,6 +13,12 @@ import { Point } from './typeorm/Point';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './auth/config/jwt.config';
+import { JoinRequest } from './typeorm/JoinRequests';
+import { TeamModule } from './team/team.module';
+import { Team } from './typeorm/Team';
+import { ClassModule } from './class/class.module';
+import { Class } from './typeorm/Class';
+import { Class_User } from './typeorm/Class_User';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -22,13 +28,15 @@ import jwtConfig from './auth/config/jwt.config';
     username:'root',
     password:'6911',
     database:'Club',
-    entities:[User,Product,Order,Point],
-    autoLoadEntities: true
+    entities:[User,Product,Order,Point,JoinRequest,Team,Class,Class_User],
+    autoLoadEntities: true,
+    // synchronize:true
+    
   }),ConfigModule.forRoot({
       isGlobal: true, // ensures all modules can access config
       envFilePath: '.env', // make sure this path is correct
       load: [jwtConfig], // load your custom config
-    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule],
+    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule, TeamModule, ClassModule],
   controllers: [AppController],
   providers: [AppService],
 })

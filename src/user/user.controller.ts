@@ -9,6 +9,8 @@ import { plainToClass } from 'class-transformer';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { CreateRequestDto } from './dto/create-request.dto';
+import { UpdateRequestDto } from './dto/updateRequest.dto';
 
 @Controller('user')
 export class UserController {
@@ -54,6 +56,7 @@ updateUser(@Request() req, @Param('id') id: string, @Body() body: any) {
   return this.userService.update(+id, dto);
 }
 
+
 @Roles(Role.Admin)
 @UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
@@ -61,4 +64,25 @@ updateUser(@Request() req, @Param('id') id: string, @Body() body: any) {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
+
+@Roles(Role.Admin,Role.Coach,Role.Player)
+@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard)
+@Post('/joinRequest')
+send(@Request() req : any , createRequestDto :CreateRequestDto){
+  const userid = req.user.id 
+  return this.userService.sendJoinRequest(userid,createRequestDto)
 }
+
+@Roles(Role.Admin,Role.Coach,Role.Player)
+@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard)
+updateRequest(reqId : number , updateRequestDto : UpdateRequestDto){
+  return this.userService.updateRequest(reqId , updateRequestDto)
+}
+
+
+}
+
+

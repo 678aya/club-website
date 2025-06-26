@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -7,17 +7,29 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/roles';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseInterceptors(FileInterceptor('file',{
+    storage : diskStorage({
+      destination:'./images',
+      filename(req, file, callback) {
+        const prefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+        const filename = `${prefix}-${file.originalname}`
+        callback(null,filename)
+      },
+    })
+  }))
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard) 
   @Post('/create')
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  create(@Body() createProductDto: CreateProductDto, @UploadedFile() file : Express.Multer.File) {
+    return this.productService.create(createProductDto , file);
   }
 
   @Get('/allProducts')
@@ -35,12 +47,22 @@ export class ProductController {
     return this.productService.findByCategory(category);
   }
 
+  @UseInterceptors(FileInterceptor('file',{
+    storage : diskStorage({
+      destination:'./images',
+      filename(req, file, callback) {
+        const prefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+        const filename = `${prefix}-${file.originalname}`
+        callback(null,filename)
+      },
+    })
+  }))
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard) 
   @Patch('/update/:id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto,@UploadedFile() file : Express.Multer.File) {
+    return this.productService.update(+id, updateProductDto,file);
   }
 
   @Roles(Role.Admin)

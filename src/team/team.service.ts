@@ -6,6 +6,7 @@ import { Team } from 'src/typeorm/Team';
 import { QueryBuilder, Repository } from 'typeorm';
 import { User } from 'src/typeorm/User';
 import { UserService } from 'src/user/user.service';
+import { Role } from 'src/enums/roles';
 
 @Injectable()
 export class TeamService {
@@ -15,9 +16,9 @@ export class TeamService {
 
   async addNewTeam(createTeamDto : CreateTeamDto){
     //checking for the coach first 
-    const coachName = createTeamDto.main_name_coch
+    const coachName = createTeamDto.main_coach_name
     const found = await this.userService.findByName(coachName)
-    if(!found ){
+    if(!found || found.role != Role.Coach){
       throw new NotFoundException(`this coach name is not valid`)
     }
     const newTeam = await this.teamRepo.create(createTeamDto)

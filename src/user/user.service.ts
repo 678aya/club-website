@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Body, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,7 +36,7 @@ export class UserService {
   }
 
   async findByName(namep : string){
-    const user = await this.UserRepo.find({ where: { name: Raw((alias) => `LOWER(${alias}) LIKE LOWER('%${namep}%')`) } });
+    const user = await this.UserRepo.findOne({ where: { name: Raw((alias) => `LOWER(${alias}) LIKE LOWER('%${namep}%')`) } });
     if(!user){
       throw new NotFoundException(`THER IS NO USER WITH THE NAME :${namep}`)
     }
@@ -52,7 +52,7 @@ export class UserService {
   }
 
   async findById(userid : number){
-    const user = await this.UserRepo.find({where :{id : userid}})
+    const user = await this.UserRepo.findOne({where :{id : userid}})
     if(!user){
       throw new NotFoundException('user not found')
     }
@@ -81,17 +81,21 @@ export class UserService {
     return this.UserRepo.remove(user)
   }
 
-  async sendJoinRequest(id : number , createRequestDto : CreateRequestDto){
-    const user = await this.UserRepo.find({where:{id : id}})
+  async sendJoinRequest(id : number ,createRequestDto : CreateRequestDto , file : Express.Multer.File){
+    console.log(file)
+    createRequestDto.filePath = `./cvs/${file.filename}`
+    const user = await this.UserRepo.findOne({where:{id : id}})
     if (!user) {
     throw new NotFoundException(`User with ID ${id} not found.`);
   }
 
-    const request = await this.joinRepo.create(createRequestDto)
+  console.log(user)
+    const request = await this.joinRepo.create({...createRequestDto,user:user})
     return this.joinRepo.save(request)
   }
 
-  async updateRequest(reqId: number, updateDto: UpdateRequestDto) {
+  async updateRequest(reqId: number, updateDto: UpdateRequestDto , file : Express.Multer.File) {
+    updateDto.filePath = `./cvs/${file.filename}`
    const request = this.joinRepo.find({ where : {id : reqId}})
    if(!request){
     throw new NotFoundException(`this request ${reqId} not found`)

@@ -24,6 +24,9 @@ export class Product{
     @Column()
     amount : number
 
+    @Column({default:''})
+    photoPath : string
+
     @OneToMany(()=>Order,(order)=>order.product)
     orders : Order[]
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,6 +11,8 @@ import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/updateRequest.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('user')
 export class UserController {
@@ -51,7 +53,7 @@ export class UserController {
 @UseGuards(JwtAuthGuard)
 @Patch('/update/:id')
 updateUser(@Request() req, @Param('id') id: string, @Body() body: any) {
-  const isAdmin = req.user?.role === 'admin';
+  const isAdmin = req.user?.role === 'Admin';
   const dto = isAdmin ? plainToClass(UpdateUserAdminDto, body) : plainToClass(UpdateUserDto, body);
   return this.userService.update(+id, dto);
 }
@@ -65,21 +67,41 @@ updateUser(@Request() req, @Param('id') id: string, @Body() body: any) {
     return this.userService.remove(+id);
   }
 
-
-@Roles(Role.Admin,Role.Coach,Role.Player)
+@UseInterceptors(FileInterceptor('file',{
+  storage : diskStorage({
+    destination:'./cvs',
+    filename(req , file , callback){
+      const prefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+      const filename = `${prefix}-${file.originalname}`
+      callback(null,filename)
+    }
+  })
+}))
+@Roles(Role.Admin,Role.Player)
 @UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
 @Post('/joinRequest')
-send(@Request() req : any , createRequestDto :CreateRequestDto){
+send(@Request() req : any , @Body() createRequestDto :CreateRequestDto, @UploadedFile() file:Express.Multer.File){
   const userid = req.user.id 
-  return this.userService.sendJoinRequest(userid,createRequestDto)
+  return this.userService.sendJoinRequest(userid,createRequestDto,file)
 }
 
-@Roles(Role.Admin,Role.Coach,Role.Player)
+@UseInterceptors(FileInterceptor('file',{
+  storage : diskStorage({
+    destination:'./cvs',
+    filename(req , file , callback){
+      const prefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+      const filename = `${prefix}-${file.originalname}`
+      callback(null,filename)
+    }
+  })
+}))
+@Roles(Role.Admin,Role.Player)
 @UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
-updateRequest(reqId : number , updateRequestDto : UpdateRequestDto){
-  return this.userService.updateRequest(reqId , updateRequestDto)
+@Patch('/updateRequest/:reqId')
+updateRequest(@Param('reqId') reqId : number ,@Body() updateRequestDto : UpdateRequestDto, @UploadedFile() file:Express.Multer.File){
+  return this.userService.updateRequest(reqId , updateRequestDto , file)
 }
 
 

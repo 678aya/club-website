@@ -9,7 +9,7 @@ import { User } from 'src/typeorm/User';
 import { JoinRequest } from 'src/typeorm/JoinRequests';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Class,User,JoinRequest])],
+  imports:[TypeOrmModule.forFeature([Class,User,JoinRequest,Class_User])],
   controllers: [ClassController],
   providers: [ClassService,UserService],
 })

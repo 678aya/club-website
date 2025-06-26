@@ -5,11 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Class } from 'src/typeorm/Class';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
+import { Role } from 'src/enums/roles';
+import { Class_User } from 'src/typeorm/Class_User';
 
 @Injectable()
 export class ClassService {
   constructor(@InjectRepository(Class) private readonly classRepo : Repository<Class>,
-              @Inject(UserService) private readonly userService : UserService){}
+              @Inject(UserService) private readonly userService : UserService,
+              @InjectRepository(Class_User) private readonly cuRepo : Repository<Class_User>){}
 
   async create(createClassDto: CreateClassDto) {
     const coachName = createClassDto.main_coach_name
@@ -17,24 +20,29 @@ export class ClassService {
     if(!found ){
           throw new NotFoundException(`this coach name is not valid`)
         }
+       if(found.role != Role.Coach){
+        throw new NotFoundException(`this coach name is not valid`)
+       }
 
         const newClass = await this.classRepo.create(createClassDto)
         return this.classRepo.save(newClass)
+  }
+
+  async findByName(name : string){
+    return  await this.classRepo.findOne({ where : { name : name}})
   }
 
   async findAll() {
     return await this.classRepo.find()
   }
 
-  async findPlayers(className : string){
-    const getClass = await this.classRepo.findOne({
-    where: { name: className },
-    relations: ['users'], 
-  })
-  if(!getClass){
-    throw new NotFoundException('this class is not valid')
+  async findById(classId : number){
+    return await this.classRepo.findOne({where : {id : classId}})
+    
   }
-  return getClass.registerations
+
+  async findPlayers(classn : string){
+    return await this.cuRepo.find({where : {className : classn}})
   }
 
   async update(classId : number, updateClassDto: UpdateClassDto) {

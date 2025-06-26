@@ -24,7 +24,7 @@ export class CreateUserDto {
     age:number
 
     @IsEnum({enum:'SubscriptionType'})
-    subscription:SubscriptionType
+    subscription ?:SubscriptionType
 
     @IsEnum({enum:'Role'})
     role:Role

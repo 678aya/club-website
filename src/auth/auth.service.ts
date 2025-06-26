@@ -53,7 +53,7 @@ export class AuthService {
         if(!user){
             throw new UnauthorizedException('USER NOT FOUND')
         }
-        const currentUser : CurrentUser = {id : userId , role : user[0].role}
+        const currentUser : CurrentUser = {id : userId , role : user.role}
         return currentUser
     }
 

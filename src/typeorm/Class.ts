@@ -9,11 +9,11 @@ export class Class{
     @Column()
     name : string 
 
-    @Column()
-    startTime : Date
+    @Column({type : 'time',default:"00:00:00"})
+    startTime : string
 
-    @Column()
-    endTime : Date
+    @Column({type : 'time',default:"00:00:00"})
+    endTime : string
 
     @Column({default:'not specefied'})
     main_coach_name : string

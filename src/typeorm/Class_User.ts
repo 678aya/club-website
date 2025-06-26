@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Class } from "./Class";
 import { User } from "./User";
 
@@ -7,9 +7,15 @@ export class Class_User{
     @PrimaryGeneratedColumn()
     id : number 
 
-    @ManyToOne(()=>Class,(Class)=>Class.registerations)
+    @Column()
+    className : string 
+
+    @Column()
+    userName : string 
+
+    @ManyToOne(()=>Class,(Class)=>Class.registerations , {cascade : true})
     class : Class
 
-    @ManyToOne(()=>User,(user)=>user.registrations)
+    @ManyToOne(()=>User,(user)=>user.registrations, {cascade : true})
     user : User
 }

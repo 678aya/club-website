@@ -10,7 +10,9 @@ import { Category } from 'src/enums/Category';
 export class ProductService {
   constructor(@InjectRepository(Product) private readonly ProductRepo : Repository<Product>){}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto , file : Express.Multer.File) {
+    console.log(file)
+    createProductDto.photoPath= `./images/${file.filename}`
     const product = this.ProductRepo.create(createProductDto)
     if(!product){
       throw new BadRequestException(`THE PRODUCT ${product} COULD NOT BE ADDED `)
@@ -42,7 +44,8 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(id: number, updateProductDto: UpdateProductDto , file : Express.Multer.File) {
+    updateProductDto.photoPath = `./images/${file.filename}`
     const product = await this.ProductRepo.update(id ,updateProductDto)
     if(!product){
       throw new NotFoundException(`User with ID ${id} not found.`);

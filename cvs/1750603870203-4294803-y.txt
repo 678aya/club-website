@@ -1,0 +1,59 @@
+
+//discord-strategy.js file
+const passport = require('passport');
+const {Strategy} = require('passport-discord');
+const { DiscordUser} = require('./mongoose/schema/discord-user')
+
+module.exports=passport.use(new Strategy({
+    clientID :"1227385424360640552",
+    clientSecret :"rYVsWio-WJ6WdRUm3JyZNCcHrURu8YOn",
+    callbackURL :"http://localhost:3000/api/auth/discord/redirect",
+    scope:["identify"]
+},async(accessToken,refrechToken,profile,done)=>{
+    let findUser;
+    console.log(DiscordUser)
+    try {
+        findUser = await DiscordUser.findOne({ discordId : profile.id});
+    } catch (error) {
+        return done(error,null)
+    }
+    
+    try {
+        if(!findUser){
+            const newUser = new DiscordUser({
+                name:profile.name,
+                discordId:profile.id
+            });
+            const newSaveUser = await newUser.save();
+            done(null,newSaveUser);
+        }
+        return done(null,findUser);
+    } catch (error) {
+        console.log(error);
+        return done(error,null);
+    }
+}));
+//discord.js file
+const mongoose = require('mongoose');
+
+const DiscordUserSchema = mongoose.Schema({
+    name :{
+        type:mongoose.Schema.Types.String,
+        required:[true,'EMPTY'],
+        unique:true,
+        index:true,
+        parse:true 
+    },
+    discordId:{
+        type:mongoose.Schema.Types.String,
+        required:[true,'EMPTY'],
+        unique:true,
+        index:true,
+        parse:true 
+    }
+})
+ 
+
+const DiscordUser = mongoose.model('DiscordUser',DiscordUserSchema);
+
+module.exports= DiscordUser

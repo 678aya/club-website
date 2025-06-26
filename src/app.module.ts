@@ -19,6 +19,7 @@ import { Team } from './typeorm/Team';
 import { ClassModule } from './class/class.module';
 import { Class } from './typeorm/Class';
 import { Class_User } from './typeorm/Class_User';
+import { ClassUserModule } from './class_user/class_user.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -36,7 +37,7 @@ import { Class_User } from './typeorm/Class_User';
       isGlobal: true, // ensures all modules can access config
       envFilePath: '.env', // make sure this path is correct
       load: [jwtConfig], // load your custom config
-    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule, TeamModule, ClassModule],
+    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule, TeamModule, ClassModule,  ClassUserModule],
   controllers: [AppController],
   providers: [AppService],
 })

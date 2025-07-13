@@ -22,7 +22,7 @@ export class TeamService {
       throw new NotFoundException(`this coach name is not valid`)
     }
     const newTeam = await this.teamRepo.create(createTeamDto)
-    return this.teamRepo.save(newTeam)
+    return await this.teamRepo.save(newTeam)
   }
 
   async findAll() {
@@ -53,6 +53,6 @@ export class TeamService {
     if (!team) {
     throw new NotFoundException('This team name is not found')
   }
-  return this.teamRepo.remove(team)
+  return await this.teamRepo.remove(team)
   }
 }

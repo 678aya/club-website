@@ -25,7 +25,7 @@ export class ClassUserService {
                                          className : foundClass.name,
                                          userName : foundUser.name 
     })
-    return this.cuRepo.save(newMember)
+    return await this.cuRepo.save(newMember)
   }
 
   findAll() {

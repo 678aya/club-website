@@ -25,7 +25,7 @@ export class ClassService {
        }
 
         const newClass = await this.classRepo.create(createClassDto)
-        return this.classRepo.save(newClass)
+        return await this.classRepo.save(newClass)
   }
 
   async findByName(name : string){

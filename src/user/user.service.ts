@@ -78,7 +78,7 @@ export class UserService {
     if (!user) {
     throw new NotFoundException(`User with ID ${id} not found.`);
   }
-    return this.UserRepo.remove(user)
+    return await this.UserRepo.remove(user)
   }
 
   async sendJoinRequest(id : number ,createRequestDto : CreateRequestDto , file : Express.Multer.File){
@@ -91,7 +91,7 @@ export class UserService {
 
   console.log(user)
     const request = await this.joinRepo.create({...createRequestDto,user:user})
-    return this.joinRepo.save(request)
+    return await this.joinRepo.save(request)
   }
 
   async updateRequest(reqId: number, updateDto: UpdateRequestDto , file : Express.Multer.File) {

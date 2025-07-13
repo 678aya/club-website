@@ -1,6 +1,7 @@
 import { Type } from "src/enums/Type";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
+import { Competition_Team } from "./Competition_Team";
 
 @Entity({name : 'Teams'})
 export class Team{
@@ -21,5 +22,8 @@ export class Team{
 
     @OneToMany(()=>User, (user)=>user.team)
     users : User[]
+
+    @OneToMany(()=>Competition_Team,(Competition_Team)=>Competition_Team.team)
+    teamRegisteration : Competition_Team
 
 }

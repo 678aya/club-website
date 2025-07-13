@@ -20,6 +20,9 @@ import { ClassModule } from './class/class.module';
 import { Class } from './typeorm/Class';
 import { Class_User } from './typeorm/Class_User';
 import { ClassUserModule } from './class_user/class_user.module';
+import { CompetitionModule } from './competition/competition.module';
+import { Competition } from './typeorm/Competition';
+import { Competition_Team } from './typeorm/Competition_Team';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -29,7 +32,7 @@ import { ClassUserModule } from './class_user/class_user.module';
     username:'root',
     password:'6911',
     database:'Club',
-    entities:[User,Product,Order,Point,JoinRequest,Team,Class,Class_User],
+    entities:[User,Product,Order,Point,JoinRequest,Team,Class,Class_User,Competition,Competition_Team],
     autoLoadEntities: true,
     // synchronize:true
     
@@ -37,7 +40,7 @@ import { ClassUserModule } from './class_user/class_user.module';
       isGlobal: true, // ensures all modules can access config
       envFilePath: '.env', // make sure this path is correct
       load: [jwtConfig], // load your custom config
-    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule, TeamModule, ClassModule,  ClassUserModule],
+    }), UserModule, ProductModule, OrderModule, PointModule, AuthModule, TeamModule, ClassModule,  ClassUserModule, CompetitionModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -20,8 +20,8 @@ export class ProductService {
     return await this.ProductRepo.save(product)
   }
 
-  findAll() {
-    return this.ProductRepo.find()
+  async findAll() {
+    return await this.ProductRepo.find()
   }
 
   async findByName(productp : string){
@@ -58,6 +58,6 @@ export class ProductService {
     if(!product){
       throw new NotFoundException(`PRODUCT with ID ${id} not found.`);
     }
-    return this.ProductRepo.remove(product)
+    return await this.ProductRepo.remove(product)
   }
 }

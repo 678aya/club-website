@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from 'src/enums/roles';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth/local-auth.guard';
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { plainToClass } from 'class-transformer';
 import { Roles } from 'src/auth/decorators/roles.decorator';

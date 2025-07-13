@@ -61,7 +61,7 @@ export class OrderService {
       this.pointServices.remove(userId)
       const newPoint = points - discount
       const newPointRecord =this.pointRepo.create({value : newPoint})
-      this.pointRepo.save(newPointRecord)
+      await this.pointRepo.save(newPointRecord)
 
       const newOrder = this.orderRepo.create({
         amount : createOrderDto.amount,
@@ -120,6 +120,6 @@ export class OrderService {
     {
       throw new NotFoundException(`THE ORDER WITH THE ID :${id} NOT FOUND!!`)
     }
-    return this.orderRepo.remove(order)
+    return await this.orderRepo.remove(order)
   }
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Competition_Team } from "./Competition_Team";
 
 @Entity({name : "competitions"})
 export class Competition{
@@ -18,4 +19,6 @@ export class Competition{
     @Column()
     date : Date
     
+    @OneToMany(()=>Competition_Team,(Competition_Team)=>Competition_Team.competition)
+    compRegisteration : Competition_Team[]
 }

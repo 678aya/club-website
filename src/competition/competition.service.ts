@@ -3,10 +3,11 @@ import { CreateCompetitionDto } from './dto/create-competition.dto';
 import { UpdateCompetitionDto } from './dto/update-competition.dto';
 import { Competition } from 'src/typeorm/Competition';
 import { Between, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CompetitionService {
-  constructor(@Inject(Competition) private readonly compRepo : Repository<Competition>){}
+  constructor(@InjectRepository(Competition) private readonly compRepo : Repository<Competition>){}
 
   async create(createCompetitionDto: CreateCompetitionDto) {
     const newComp = this.compRepo.create(createCompetitionDto)

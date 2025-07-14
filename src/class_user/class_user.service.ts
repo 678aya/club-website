@@ -28,19 +28,19 @@ export class ClassUserService {
     return await this.cuRepo.save(newMember)
   }
 
-  findAll() {
-    return `This action returns all classUser`;
-  }
+  // findAll() {
+  //   return `This action returns all classUser`;
+  // }
 
-  findOne(id: number) {
-    return `This action returns a #${id} classUser`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} classUser`;
+  // }
 
-  update(id: number, updateClassUserDto: UpdateClassUserDto) {
-    return `This action updates a #${id} classUser`;
-  }
+  // update(id: number, updateClassUserDto: UpdateClassUserDto) {
+  //   return `This action updates a #${id} classUser`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} classUser`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} classUser`;
+  // }
 }

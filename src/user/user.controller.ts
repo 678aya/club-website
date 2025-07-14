@@ -12,6 +12,8 @@ import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/updateRequest.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ApiBearerAuth } from '@nestjs/swagger';
+
 
 @Controller('user')
 export class UserController {
@@ -22,6 +24,7 @@ export class UserController {
     return this.userService.signUp(createUserDto);
   }
 
+  // @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard) 

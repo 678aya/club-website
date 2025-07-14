@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Competition } from "./Competition";
 import { Team } from "./Team";
 
-Entity()
+@Entity()
 export class Competition_Team{
     @PrimaryGeneratedColumn()
     id : number 

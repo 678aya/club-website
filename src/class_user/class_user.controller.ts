@@ -26,23 +26,23 @@ export class ClassUserController {
     return this.classUserService.addUserToClass(userId,createClassUserDto)
   }
 
-  @Get()
-  findAll() {
-    return this.classUserService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.classUserService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.classUserService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.classUserService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClassUserDto: UpdateClassUserDto) {
-    return this.classUserService.update(+id, updateClassUserDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateClassUserDto: UpdateClassUserDto) {
+  //   return this.classUserService.update(+id, updateClassUserDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.classUserService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.classUserService.remove(+id);
+  // }
 }

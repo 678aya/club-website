@@ -37,7 +37,6 @@ export class CompetitionController {
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  @Post('/addCompetition')
   @Patch('/update/:id')
   update(@Param('id') id: string, @Body() updateCompetitionDto: UpdateCompetitionDto) {
     return this.competitionService.update(+id, updateCompetitionDto);
@@ -46,7 +45,6 @@ export class CompetitionController {
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
-  @Post('/addCompetition')
   @Delete('/delete/:id')
   remove(@Param('id') id: string) {
     return this.competitionService.remove(+id);
